@@ -3,12 +3,14 @@ package controllers
 import (
 	"backend/initializers"
 	"backend/models"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/resendlabs/resend-go"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -47,6 +49,20 @@ func SignUp(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User created successfully",
 	})
+
+	params := &resend.SendEmailRequest{
+		From:    "Michele <hello@michelemanna.me>",
+		To:      []string{user.Email},
+		Html:    "<strong>Welcome</strong> " + user.Email + " to auth backend, thanks for signing up!",
+		Subject: "Your first login!",
+	}
+
+	sent, err := initializers.Resend.Emails.Send(params)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(sent.Id)
 }
 
 func SignIn(c *gin.Context) {
