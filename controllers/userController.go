@@ -101,3 +101,26 @@ func SignIn(c *gin.Context) {
 		"message": "User signed in successfully",
 	})
 }
+
+func SignOut(c *gin.Context) {
+	c.SetCookie("Authorization", "", -1, "", "", false, true)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User signed out successfully",
+	})
+}
+
+func Validate(c *gin.Context) {
+	user, _ := c.Get("user")
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": user,
+	})
+}
+
+func Delete(c *gin.Context) {
+	user, _ := c.Get("user")
+	initializers.DB.Unscoped().Delete(&models.User{}, user)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User deleted successfully",
+	})
+}
