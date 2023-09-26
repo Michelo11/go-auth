@@ -22,6 +22,7 @@ func main() {
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 	r.POST("/signout", middleware.RequireAuth, controllers.SignOut)
 	r.DELETE("/delete", middleware.RequireAuth, controllers.Delete)
+	r.POST("/forgot", controllers.Forgot)
 
 	r.Run()
 }
